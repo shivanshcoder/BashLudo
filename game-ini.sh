@@ -1,6 +1,13 @@
 
 #!/bin/bash
 
+#Global Game Variables
+
+# Game keeps running till this variable has value no
+exit.game=no
+
+
+
 game.start(){
 
     while true; do
@@ -14,10 +21,9 @@ game.start(){
         else 
             break
         fi
-
     done
-
 }
+
 
 game(){
     printf "GAME"
@@ -29,22 +35,18 @@ my.select(){
     do
 
     case $os in
-    # Two case values are declared here for matching
-    "Ubuntu"|"LinuxMint")
-    echo "I also use $os."
+    "yes"|"no")
+    echo "$os"
     ;;
-    # Three case values are declared here for matching
-    "Windows8" | "Windows10" | "WindowsXP")
-    echo "Why don't you try Linux?"
-    ;;
-    # Matching with invalid data
+
     *)
-    echo "Invalid entry."
+    echo "Invalid."
     break
     ;;
     esac
 done
 }
+
 
 game.loop(){
     clear
@@ -55,11 +57,9 @@ game.loop(){
 
     clear
 
-    printf "Play Again?"
+    printf "Exit Game?"
     read answer
 
-
-    
 
 }
 
