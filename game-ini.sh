@@ -4,9 +4,27 @@
 #Global Game Variables
 
 # Game keeps running till this variable has value no
-exit.game=no
+exit_game=no
 
+# Custom function return value storage global variables
+# Functions which return some value set value of this variable
+function_return_val=0
 
+my.select(){
+    # error_msg=$1
+    # shift
+
+    select os in $@
+    do
+    if [[ -n $os ]]; then
+        echo $os
+        exit_game=$os
+        break;
+    else
+        echo "Invalid Answer"
+    fi
+done
+}
 
 game.start(){
 
@@ -29,47 +47,43 @@ game(){
     printf "GAME"
 }
 
-my.select(){
-
-    select os in yes no
-    do
-
-    case $os in
-    "yes"|"no")
-    echo "$os"
-    ;;
-
-    *)
-    echo "Invalid."
-    break
-    ;;
-    esac
-done
-}
 
 
 game.loop(){
-    clear
 
-    game.start
+    while true; do
 
-    game
+        # Clear the screen to start fresh
+        clear
 
-    clear
+        # Setup before starting the game
+        game.start
 
-    printf "Exit Game?"
-    read answer
+        # Actual Game is played using this game
+        game
 
+        # Exit the game or not
+        printf "\n\nExit Game?\n"
+        my.select yes no
 
+        if [[ $exit_game -eq "yes" ]]; then
+            break;
+        fi
+    done
 }
 
 
 # game.loop
 
-myfun(){
-    echo "HELLO"
-    echo 4545
-}
 
-myvar=$(myfun)
-echo $myvar
+menu.select(){
+    val=1
+    while true; do
+
+        read -s -n 1 key
+        printf "\e[1;1H$val"
+        val=$val+1
+        val=$val
+
+
+}

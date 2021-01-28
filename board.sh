@@ -178,41 +178,11 @@ init.players(){
 
 ###########################END################################
 
+
 ##########################START###############################
 # Try printing stuff
 
-redfg="\e[31m"
-redbg="\e[41m"
-
-bluefg="\e[34m"
-bluebg="\e[44m"
-
-greenfg="\e[32m"
-greenbg="\e[42m"
-
-yellowfg="\e[33m"
-yellowbg="\e[43m"
-
-declare -A colors
-# Green
-colors[green:bg]=42
-colors[green:border]=32
-colors[green:text]=32
-
-# Red
-colors[red:bg]=41
-colors[red:border]=31
-colors[red:text]=31
-
-# Blue
-colors[blue:bg]=44
-colors[blue:border]=34
-colors[blue:text]=34
-
-# Yellow
-colors[yellow:bg]=43
-colors[yellow:border]=33
-colors[yellow:text]=33
+source colors.sh
 
 # set.pawn.colors(){
 #     player=$1
