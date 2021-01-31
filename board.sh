@@ -202,13 +202,13 @@ print.func(){
 
 print.box(){
     color=$2
-    bgcolor=$3
+    # bgcolor=$3
 
-    printf "\e[5m\e[$1H\e[1A\e[2D" 
+    printf "\e[$1H\e[1A\e[2D" 
     printf "$color"
     printf "+---+"
     printf "\e[1B\e[5D"
-    printf "|${bgcolor}   \e[0;5m${color}|"
+    printf "|${bgcolor}   \e[0;m${color}|"
     printf "\e[1B\e[5D"
     printf "+---+\e[0m"
 }
@@ -217,13 +217,15 @@ print.box.auto(){
 
     color=$2
     border_color=${colors[$color:border]}
-    bgcolor=${colors[$color:bg]}
+    # bgcolor=${colors[$color:bg]}
+    # bgcolor=""
     
-    printf "\e[5m\e[$1H\e[1A\e[2D" 
+    printf "\e[m\e[$1H\e[1A\e[2D" 
     printf "\e[${border_color}m"
     printf "+---+"
     printf "\e[1B\e[5D"
-    printf "|\e[${bgcolor}m   \e[0;5m\e[${border_color}m|"
+    # printf "|\e[${bgcolor}m   \e[0m\e[${border_color}m|"
+    printf "|   |"
     printf "\e[1B\e[5D"
     printf "+---+\e[0m"
 }
@@ -239,7 +241,7 @@ print.box.auto "14;17" "red"
 read s
 print.pawn(){
     text_color=$2
-    printf "\e[${1}H\e[1D\e[1;${text_color};7m $ \e[0m"
+    printf "\e[${1}H\e[1D\e[1;${text_color};40;7;5m 1 \e[0m"
 }
 clear
 

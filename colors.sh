@@ -5,15 +5,19 @@
 
 redfg="\e[31m"
 redbg="\e[41m"
+redbg=""
 
 bluefg="\e[34m"
 bluebg="\e[44m"
+bluebg=""
 
 greenfg="\e[32m"
 greenbg="\e[42m"
+greenbg=""
 
 yellowfg="\e[33m"
 yellowbg="\e[43m"
+yellowbg=""
 
 declare -A colors
 # Green
