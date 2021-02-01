@@ -259,17 +259,17 @@ paint.board(){
     cols=(7 11 7 7 19 19)
     # Yellow Boxes
 
-    # colored_boxes=(
-    #     "14;7" "18;11" "4;7" "10;7" "4;19" "10;19"  # Yellow Boxes
-    #     "6;27" "4;35" "4;43" "10;43" "4;55" "10;55" # Blue Boxes
-    #     "14;51" "18;55" "22;43" "28;43" "22;55" "28;55" # Red Boxes
-    #     "28;27" "26;35" "22;7" "28;7" "22;19" "28;19" # Green Boxes 
-    # )
+     colored_boxes=(
+         "14;7" "18;11" # "4;7" "10;7" "4;19" "10;19"   Yellow Boxes
+         "6;27" "4;35" # "4;43" "10;43" "4;55" "10;55" # Blue Boxes
+         "14;51" "18;55" # "22;43" "28;43" "22;55" "28;55" # Red Boxes
+         "28;27" "26;35" # "22;7" "28;7" "22;19" "28;19" # Green Boxes 
+     )
 
-    # i=0
+    i=0
 
     # for index in "${!colored_boxes[@]}"; do
-    #     color_tile=${total_colors[$(($index/6))]}
+    #     color_tile=${total_colors[$(($index/2))]}
     #     coords=${colored_boxes[$index]}
 
     #     #echo "$coords=$color_tile"
@@ -295,24 +295,30 @@ paint.board(){
     # for j in {20..28..2}; do
     #     print.box "$j;31" $greenfg $greenbg
     # done
-
-    printf "\e[3;5H$Ludo_L"
-    printf "\e[3;41H$Ludo_U"
-    printf "\e[21;5H$Ludo_D"
-    printf "\e[21;41H$Ludo_O"
-
-    print.pawn "28;19" 42
-    print.pawn "14;11" 42
+    printf "\e[5m\e[3;5H$Ludo_L"
+    printf "\e[5m\e[3;41H$Ludo_U"
+    printf "\e[5m\e[21;5H$Ludo_D"
+    printf "\e[5m\e[21;41H$Ludo_O"
+    # print.pawn "28;19" 42
+    # print.pawn "14;11" 42
 
 
 
 }
+
+    printf "\e[5m\e[3;5H$Ludo_L"
+    printf "\e[5m\e[3;41H$Ludo_U"
+    printf "\e[5m\e[21;5H$Ludo_D"
+    printf "\e[5m\e[21;41H$Ludo_O"
+    read d
+
+
 paint.board
 
 #read s
 #clear
 #paint.board
-print.pawn "28;55" 41
+# print.pawn "28;55" 41
 
 
  

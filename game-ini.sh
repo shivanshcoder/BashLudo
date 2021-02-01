@@ -26,7 +26,7 @@ my.select(){
 done
 }
 
-game.start(){
+game.start.old(){
 
     while true; do
 
@@ -41,6 +41,7 @@ game.start(){
         fi
     done
 }
+
 
 
 game(){
@@ -75,15 +76,62 @@ game.loop(){
 
 # game.loop
 
+source printing.sh
+source keyboard.sh
 
-menu.select(){
-    val=1
+game.start(){
+
+    positions=("3;5" "3;41" "21;5" "21;41")
+    icons=("$Ludo_L" "$Ludo_U" "$Ludo_D" "$Ludo_O")
+
+    for i in {0..3}; do
+        printf "\e[${positions[$i]}H${icons[$i]}"
+    done
+
+    # printf "\e[7;48H\e[5;7m(=)"
+
+    cursor_pos=("7;12" "7;48" "25;12" "25;48")
+    index=0
+
+    old_index=0
+
     while true; do
+        printf "\e[${positions[$old_index]}H${icons[$old_index]}"
+        printf "\e[${cursor_pos[$old_index]}H   "
 
-        read -s -n 1 key
-        printf "\e[1;1H$val"
-        val=$val+1
-        val=$val
+        printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
+        printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
+        old_index=$index
+        key=$(keyboard_handler)
+
+        case "$key" in 
+
+            "up"|"right")
+                index=$((index+1));;
+
+            "down"|"left")
+                index=$((index-1));;
+                
+            "quit")
+                break;;
+        esac
+
+        
+        index=$((index%4))
+
+    done
 
 
+    # while true; do
+#     key=$(keyboard_handler)
+#     echo "This was pressed:  $key"
+#     if [[  $key == "Bye!" ]]; then
+#         break;
+#     fi
+# done
 }
+clear
+game.start
+# printf "\e[5m\e[3;5H$Ludo_L"
+# read 
+# printf "\e[3;5H$Ludo_L"

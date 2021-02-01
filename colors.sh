@@ -56,11 +56,11 @@ print.box(){
     color=$2
     bgcolor=$3
 
-    printf "\e[5m\e[$1H\e[1A\e[2D" 
+    printf "\e[$1H\e[1A\e[2D" 
     printf "$color"
     printf "+---+"
     printf "\e[1B\e[5D"
-    printf "|${bgcolor} $ \e[0;5m${color}|"
+    printf "|${bgcolor} $ \e[0m${color}|"
     printf "\e[1B\e[5D"
     printf "+---+\e[0m"
 }
