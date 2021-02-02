@@ -82,19 +82,19 @@ keyboard_handler(){
     case "$key" in
         $'\e[A'|$'\e0A')  # up arrow
            ((cur > 1)) && ((cur--))
-            echo up;;
+            echo :up;;
 
         $'\e[D'|$'\e0D') # left arrow
             ((cur > 1)) && ((cur--))
-            echo left;;
+            echo :left;;
 
         $'\e[B'|$'\e0B')  # down arrow
             ((cur < $#-1)) && ((cur++))
-            echo down;;
+            echo :down;;
 
         $'\e[C'|$'\e0C')  # right arrow
             ((cur < $#-1)) && ((cur++))
-            echo right;;
+            echo :right;;
 
         # $'\e[1~'|$'\e0H'|$'\e[H')  # home key:
         #     cur=0
@@ -106,12 +106,18 @@ keyboard_handler(){
             
         #     echo end;;
 
+        
+
+
         $"")   # Space or Enter Key
-            echo space;;
+            echo :space;;
+
+        [a-zA-Z])
+            echo $key;;
 
         q) # q: quit
             # quit.key
-            echo quit
+            echo :quit
             # exit;;
 
     esac    

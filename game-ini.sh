@@ -79,6 +79,9 @@ game.loop(){
 source printing.sh
 source keyboard.sh
 
+
+
+
 game.start(){
 
     positions=("3;5" "3;41" "21;5" "21;41")
@@ -88,37 +91,46 @@ game.start(){
         printf "\e[${positions[$i]}H${icons[$i]}"
     done
 
-    # printf "\e[7;48H\e[5;7m(=)"
+    instructions
 
-    cursor_pos=("7;12" "7;48" "25;12" "25;48")
+    # cursor_pos=("7;12" "7;48" "25;12" "25;48")
+    cursor_pos=("7;9" "7;45" "25;9" "25;45")
     index=0
 
     old_index=0
+    printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
+
+    # printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
+    printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
 
     while true; do
-        printf "\e[${positions[$old_index]}H${icons[$old_index]}"
-        printf "\e[${cursor_pos[$old_index]}H   "
-
-        printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
-        printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
-        old_index=$index
         key=$(keyboard_handler)
 
         case "$key" in 
 
-            "up"|"right")
+            ":right")
                 index=$((index+1));;
 
-            "down"|"left")
+            ":left")
                 index=$((index-1));;
                 
-            "quit")
+            [a-zA-Z]*)
+                echo "$key";;
+            ":quit")
                 break;;
         esac
 
-        
         index=$((index%4))
+        if [[ $index -ne $old_index ]]; then
 
+            printf "\e[${positions[$old_index]}H${icons[$old_index]}"
+            printf "\e[${cursor_pos[$old_index]}H   "
+
+            printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
+            printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
+        fi
+
+        old_index=$index
     done
 
 

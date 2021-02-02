@@ -45,14 +45,14 @@ Ludo_L_color="\e[33m"
 Ludo_L="${Ludo_L_color}+---+       +---+\e[1B\e[17D|   |       |   |\e[1B\e[17D+---+       +---+\e[1B\e[17D |||             \e[1B\e[17D |||             \e[1B\e[17D |||             \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |=======|   |\e[1B\e[17D+---+       +---+\e[0m"
 
 Ludo_U_color="\e[34m"
-Ludo_U="${Ludo_U_color}+---+       +---+\e[1B\e[17D|   |       |   |\e[1B\e[17D+---+       +---+\e[1B\e[17D |||         ||| \e[1B\e[17D |||         ||| \e[1B\e[17D |||         ||| \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |=======|   |\e[1B\e[17D+---+       +---+\e[0m"
+Ludo_U="${Ludo_U_color}+---+       +---+\e[1B\e[17D|   |       |   |\e[1B\e[17D+---+       +---+\e[1B\e[17D |||         ||| \e[1B\e[17D |||         ||| \e[1B\e[17D \||         ||/ \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |==___==|   |\e[1B\e[17D+---+       +---+\e[0m"
 
 Ludo_D_color="\e[32m"
 #                                                             FOR PRINTING Double forward slashes
 Ludo_D=$"${Ludo_D_color}+---+       +---+\e[1B\e[17D|   |=====\\\\\|   |\e[1B\e[17D+---+       +---+\e[1B\e[17D |||         |\  \e[1B\e[17D |||         ||) \e[1B\e[17D |||         |/  \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |=====//|   |\e[1B\e[17D+---+       +---+\e[0m"
 
 Ludo_O_color="\e[31m"
-Ludo_O="${Ludo_O_color}+---+       +---+\e[1B\e[17D|   |=======|   |\e[1B\e[17D+---+       +---+\e[1B\e[17D |||         ||| \e[1B\e[17D |||         ||| \e[1B\e[17D |||         ||| \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |=======|   |\e[1B\e[17D+---+       +---+\e[0m"
+Ludo_O="${Ludo_O_color}+---+       +---+\e[1B\e[17D|   |__===__|   |\e[1B\e[17D+---+       +---+\e[1B\e[17D  ||         ||  \e[1B\e[17D |||         ||| \e[1B\e[17D  ||         ||  \e[1B\e[17D+---+       +---+\e[1B\e[17D|   |==___==|   |\e[1B\e[17D+---+       +---+\e[0m"
 
 # printf "\e[5;5H\e[2BHello";
 # printf "$Ludo_L"
@@ -67,3 +67,11 @@ Ludo_O="${Ludo_O_color}+---+       +---+\e[1B\e[17D|   |=======|   |\e[1B\e[17D+
 
 ############################# END #####################################
 
+instructions(){
+    printf "\e[13;20HWelcome To Console Ludo"
+    printf "\e[14;13HThis Game can be played by 2-4 players"
+    printf "\e[15;14HUsing Arrows chose the desired color"
+    printf "\e[16;12HBlinking color specifies the selected color"
+    printf "\e[17;12HWhile on a color, you can edit player name,"
+    printf "\e[18;14Hby directly typing using alphabet keys"
+}
