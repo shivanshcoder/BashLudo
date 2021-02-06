@@ -163,7 +163,24 @@ done
 # Start with the player colors and pawns
 
 declare -A players
+declare -A pawns
 
+init.pawn(){
+    # Get the color
+    color=$1
+    
+    # Set the start tile, where the pawns enter the game for moving
+    start_tile=$2
+
+    shift 
+    shift
+    
+    # Set home tiles, where the pawns are placed from start
+    home_tiles=$2
+
+
+    #
+}
 
 init.players(){
     players[green:start]="14;5"
@@ -314,7 +331,9 @@ paint.board(){
 
 
 paint.board
+source test.sh
 
+# print.boxx "1;1" 61 31
 #read s
 #clear
 #paint.board

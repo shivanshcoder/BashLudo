@@ -107,7 +107,8 @@ keyboard_handler(){
         #     echo end;;
 
         
-
+        $'\e[H')
+            echo :back;;
 
         $"")   # Space or Enter Key
             echo :space;;

@@ -113,9 +113,13 @@ game.start(){
 
             ":left")
                 index=$((index-1));;
+
+            # ":back")
+            #     echo "BACKSPACE";;
                 
             [a-zA-Z]*)
                 echo "$key";;
+
             ":quit")
                 break;;
         esac
