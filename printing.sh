@@ -65,6 +65,13 @@ Ludo_O="${Ludo_O_color}+---+       +---+\e[1B\e[17D|   |__===__|   |\e[1B\e[17D+
 # read
 
 
+print.ludo(){
+    printf "\e[${1}m\e[3;5H$Ludo_L"
+    printf "\e[${1}m\e[3;41H$Ludo_U"
+    printf "\e[${1}m\e[21;5H$Ludo_D"
+    printf "\e[${1}m\e[21;41H$Ludo_O"
+}
+
 ############################# END #####################################
 
 instructions(){

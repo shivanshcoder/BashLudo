@@ -153,8 +153,7 @@ safepoints=("14;5" "18;7" "6;15" "4;19" "14;27" "18;29" "26;19" "28;15")
 for i in ${safepoints[@]}; do
     board_tiles[$i:safety]="safe"
 done
-
-# echo ${!board_tiles[@]} 
+      
 
 ###########################END################################
 
@@ -162,34 +161,45 @@ done
 ##########################START###############################
 # Start with the player colors and pawns
 
-declare -A players
 declare -A pawns
 
-init.pawn(){
+
+init.pawn.prop(){
     # Get the color
     color=$1
     
     # Set the start tile, where the pawns enter the game for moving
     start_tile=$2
 
+    # shift so that only home_tile coordinates are left in the array
     shift 
     shift
     
     # Set home tiles, where the pawns are placed from start
-    home_tiles=$2
+    home_tiles=$@
 
 
-    #
+    for i in {1..4}; do
+        pawns[$color:$i:start_tile]=$start_tile
+        pawns[$color:$i:home_tile]=${home_tiles[$((i+1))]}
+    done
+
 }
 
-init.players(){
-    players[green:start]="14;5"
-    players[red:start]="4;19"
-    players[yellow:start]="18;29"
-    players[blue:start]="28;15"
+init.pawn(){
 
-    
+    local home_tiles_y=("4;7" "10;7" "4;19" "10;19")  # Yellow Boxes
+    local home_tiles_b=("4;43" "10;43" "4;55" "10;55") # Blue Boxes
+    local home_tiles_g=("22;43" "28;43" "22;55" "28;55") # Red Boxes
+    local home_tiles_r=("22;7" "28;7" "22;19" "28;19") # Green Boxes 
+
+    init.pawn.prop y "18;29" ${home_tiles_y[@]}
+    init.pawn.prop b "28;15" ${home_tiles_b[@]}
+    init.pawn.prop g "14;5"  ${home_tiles_g[@]}
+    init.pawn.prop r "4;19"  ${home_tiles_r[@]}
+
 }
+
 
 
 
@@ -201,17 +211,6 @@ init.players(){
 
 source colors.sh
 
-# set.pawn.colors(){
-#     player=$1
-#     shift
-#     color_args = ($@)
-#     color_props = ("bg" "border" "text")
-#     for((index=0;index<${#@};index++)); do
-#         pawn_colors[$player:${color_props[$index]}] = ${color_args[$index]}
-#     done
-# }
-
-# set.pawn.colors green 42 32 
 
 print.func(){
     printf $1
@@ -272,75 +271,56 @@ paint.board(){
     cat "design_board.txt"
 
     total_colors=("yellow" "blue" "red" "green")
-    rows=(14 18 4 10 4 10)
-    cols=(7 11 7 7 19 19)
-    # Yellow Boxes
 
-     colored_boxes=(
-         "14;7" "18;11" # "4;7" "10;7" "4;19" "10;19"   Yellow Boxes
-         "6;27" "4;35" # "4;43" "10;43" "4;55" "10;55" # Blue Boxes
-         "14;51" "18;55" # "22;43" "28;43" "22;55" "28;55" # Red Boxes
-         "28;27" "26;35" # "22;7" "28;7" "22;19" "28;19" # Green Boxes 
-     )
+    colored_boxes=(
+        "14;7"  "18;11"  # Yellow Boxes
+        "6;27"  "4;35"   # Blue Boxes
+        "14;51" "18;55"  # Red Boxes
+        "28;27" "26;35"  # Green Boxes 
+    )
 
     i=0
 
-    # for index in "${!colored_boxes[@]}"; do
-    #     color_tile=${total_colors[$(($index/2))]}
-    #     coords=${colored_boxes[$index]}
+    for index in "${!colored_boxes[@]}"; do
+        color_tile=${total_colors[$(($index/2))]}
+        coords=${colored_boxes[$index]}
 
-    #     #echo "$coords=$color_tile"
-    #     print.box.auto $coords "$color_tile"
-    #     #read dd
-    # done
+        print.box.auto $coords "$color_tile"
+    done
 
-    # for i in {7..23..4}; do
-    #     print.box "16;$i" $yellowfg $yellowbg
-    # done
+    #Yellow Boxes
+    for i in {7..23..4}; do
+        print.box "16;$i" $yellowfg $yellowbg
+    done
 
-    # #Blue Boxes
-    # for j in {4..12..2}; do
-    #     print.box "$j;31" $bluefg $bluebg
-    # done
+    #Blue Boxes
+    for j in {4..12..2}; do
+        print.box "$j;31" $bluefg $bluebg
+    done
 
-    # #Red Boxes
-    # for j in {39..55..4}; do
-    #     print.box "16;$j" $redfg $redbg
-    # done
+    #Red Boxes
+    for j in {39..55..4}; do
+        print.box "16;$j" $redfg $redbg
+    done
 
-    # #Green Boxes
-    # for j in {20..28..2}; do
-    #     print.box "$j;31" $greenfg $greenbg
-    # done
-    printf "\e[5m\e[3;5H$Ludo_L"
-    printf "\e[5m\e[3;41H$Ludo_U"
-    printf "\e[5m\e[21;5H$Ludo_D"
-    printf "\e[5m\e[21;41H$Ludo_O"
-    # print.pawn "28;19" 42
-    # print.pawn "14;11" 42
+    #Green Boxes
+    for j in {20..28..2}; do
+        print.box "$j;31" $greenfg $greenbg
+    done
 
-
-
+    printf "\e[3;5H$Ludo_L"
+    printf "\e[3;41H$Ludo_U"
+    printf "\e[21;5H$Ludo_D"
+    printf "\e[21;41H$Ludo_O"
 }
 
-    printf "\e[5m\e[3;5H$Ludo_L"
-    printf "\e[5m\e[3;41H$Ludo_U"
-    printf "\e[5m\e[21;5H$Ludo_D"
-    printf "\e[5m\e[21;41H$Ludo_O"
-    read d
+printf "\e[5m\e[3;5H$Ludo_L"
+printf "\e[5m\e[3;41H$Ludo_U"
+printf "\e[5m\e[21;5H$Ludo_D"
+printf "\e[5m\e[21;41H$Ludo_O"
+read d
 
 
 paint.board
-source test.sh
-
-# print.boxx "1;1" 61 31
-#read s
-#clear
-#paint.board
-# print.pawn "28;55" 41
-
-
- 
-
-read l
+read
 ###########################END################################
