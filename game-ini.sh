@@ -114,14 +114,17 @@ game.start(){
             ":left")
                 index=$((index-1));;
 
-            # ":back")
-            #     echo "BACKSPACE";;
-                
-            [a-zA-Z]*)
-                echo "$key";;
-
-            ":quit")
+            q)
                 break;;
+
+            e)
+                printf "\e[16;16HPlease Enter Name"
+                read name
+                # break;;
+                
+            # [a-zA-Z]*)
+            #     echo "$key";;
+
         esac
 
         index=$((index%4))

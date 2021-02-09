@@ -150,10 +150,10 @@ clear
 #     printf "\e[1;1H\e[${color}m     \e[0m"
 #     sleep 0.4
 # done
-read s
+# read s
 
 i=1
-print.boxx "1;1" 7 5
+# print.boxx "1;1" 7 5
 while true; do
     printf "\e[2;2H${dice_f[$i]}"
     # read s
@@ -161,9 +161,9 @@ while true; do
     i=$((i%7))
     # i=$((1 + RANDOM % 7))
 
-    sleep 0.03
+    sleep 0.04
     printf "\e[2;2H\e[7m${dice_f[0]}\e[0m"
-    sleep 0.06
+    sleep 0.08
     # read s
 
 done

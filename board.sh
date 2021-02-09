@@ -4,27 +4,36 @@
 
 declare -A board_tiles
 
+link.tiles(){
+    local tile1=$1
+    local tile2=$2
+    board_tiles[$tile1:next]=$tile2
+    board_tiles[$tile2:back]=$tile1
+}
+
 chain.horz(){
     # $1 is the row number
     # $2 is the starting col number
     # $3 is the ending col number
-    # $4 is the direction -2 means left and +2 means right
+    # $4 is the direction -4 means left and +4 means right
     # $5 is the extra data color we want to have associated with tile
     
     for ((col=$2;col!=$3;col+=$4)); do
-        board_tiles[$1;$col:0]="$1;$((col+$4))"
+        # board_tiles[$1;$col:0]="$1;$((col+$4))"
+        link.tiles "$1;$col" "$1;$((col+$4))"
     done
 }
 
 chain.vert(){
-    # $1 is the row number
-    # $2 is the starting col number
-    # $3 is the ending col number
+    # $1 is the starting row number
+    # $2 is the ending row number
+    # $3 is the col number
     # $4 is the direction -2 means up and +2 means down
     # $5 is the extra data color we want to have associated with tile
 
     for ((row=$1; row!=$2; row+=$4)); do
-        board_tiles[$row;$3:0]="$((row+$4));$3"
+        # board_tiles[$row;$3:0]="$((row+$4));$3"
+        link.tiles "$row;$3" "$((row+$4));$3"
     done
 }
 
@@ -33,25 +42,27 @@ chain.vert(){
 
 ## 1 based Horizontal Index
 
-chain.vert 12 2 15 -2
-chain.horz 2 15 19 2
-chain.vert 2 12 19 2
-board_tiles[12;19:0]="14;21"
 
-chain.horz 14 21 31 2
-chain.vert 14 18 31 2
-chain.horz 18 31 21 -2
-board_tiles[18;21:0]="20;19"
+chain.vert 12 2 27 -2
+chain.horz 2 27 35 4
+chain.vert 2 12 35 2
+link.tiles "12;35" "14;39"
 
-chain.vert 20 30 19 2
-chain.horz 30 19 15 -2
-chain.vert 30 20 15 -2
-board_tiles[20;15:0]="18;13"
+chain.horz 14 39 59 4
+chain.vert 14 18 59 2
+chain.horz 18 59 39 -4
+link.tiles "18;39" "20;35"
 
-chain.horz 18 13 3 -2
+chain.vert 20 30 35 2
+chain.horz 30 35 27 -4
+chain.vert 30 20 27 -2
+link.tiles "20;27" "18;23"
+
+
+chain.horz 18 23 3 -4
 chain.vert 18 14 3 -2
-chain.horz 14 3 13 2
-board_tiles[14;13:0]="12;15"
+chain.horz 14 3 23 4
+link.tiles "14;23" "12;27"
 
 
 ###########################END################################
@@ -60,91 +71,22 @@ board_tiles[14;13:0]="12;15"
 ##########################START###############################
 # Creating the tunnels for the players
 
-board_tiles[16;3:1]="16;5"
-chain.horz 16 5 13 2
+board_tiles[16;3:tunnel]="16;7"
+board_tiles[16;7:back]="16;3"
+chain.horz 16 7 23 2
 
-board_tiles[16;31:1]="16;29"
-chain.horz 16 29 21 -2
+board_tiles[16;59:tunnel]="16;55"
+board_tiles[16;55:back]="16;59"
+chain.horz 16 55 39 -2
 
-board_tiles[2;17:1]="4;17"
-chain.vert 4 12 17 2
+board_tiles[2;31:tunnel]="4;31"
+board_tiles[4;31:back]="2;31"
+chain.vert 4 12 31 2
 
-board_tiles[30;17:1]="28;17"
-chain.vert 28 20 17 -2
+board_tiles[30;31:tunnel]="28;31"
+board_tiles[28;31:back]="30;31"
+chain.vert 28 20 31 -2
 ###########################END################################
-
-##########################START###############################
-
-# Setting Extra information regarding the tiles
-
-set.paint.linked(){
-    # Sets paint attributes for array of tiles and further if chain(linked) exists
-
-    # The Color which we want to set for the 
-    color=$1
-    shift
-
-    # Get all the 
-    tiles=($@)
-
-    for tile in $tiles; do
-        ptr=$tile
-        while true; do
-            if [ -n "${board_tiles[$ptr:color]}" ]; then
-                # echo "EXIT REPEAT"
-                break
-            fi
-            
-            board_tiles[${ptr}:color]=$color;
-
-            ptr=${board_tiles[$ptr:0]};
-
-            if [ -z ${board_tiles[$ptr:0]} ]; then
-                break
-            fi
-        done
-    done
-
-}
-
-set.tile.attr(){
-
-    ptr=$1 # Get the first tile
-    shift
-    chain_limit=$1 # Get the upper limit for stopping checking the linked tiles, because there could be closed cycle of tiles
-    shift
-    echo $chain_limit
-
-    for tile_number in {1..$chain_limit}; do
-        echo $1
-        property_name=$1 # Get the property name
-        shift
-        property_value=$1 # Get the property value for soring
-        shift
-
-        if [ -z "$property_name" ]; then
-            break
-        fi
-
-        board_tiles[${ptr}:$property_name]=$property_value
-        ptr=${board_tiles[$ptr:0]};
-    done
-        
-}
-
-# for tile_index in {1..52..1}; do
-#     board_tiles[${ptr}:color]="plain"
-#     ptr=${board_tiles[$ptr:0]}
-#     echo $ptr
-
-# done
-# echo ${#board_tiles[@]}
-# echo ${board_tiles[@]}
-# read s
-
-###########################END################################
-
-
 
 ##########################START############################### 
 # Creating the Safe Points
@@ -163,25 +105,30 @@ done
 
 declare -A pawns
 
+pawn_open_steps=50 #Unsafe steps, open game steps
+pawn_max_steps=56 #Steps after game finishes for the pawn
+
 
 init.pawn.prop(){
     # Get the color
-    color=$1
+    local color=$1
     
     # Set the start tile, where the pawns enter the game for moving
-    start_tile=$2
+    local start_tile=$2
 
     # shift so that only home_tile coordinates are left in the array
     shift 
     shift
     
     # Set home tiles, where the pawns are placed from start
-    home_tiles=$@
-
+    local h_tiles=($@)
 
     for i in {1..4}; do
         pawns[$color:$i:start_tile]=$start_tile
-        pawns[$color:$i:home_tile]=${home_tiles[$((i+1))]}
+
+        pawns[$color:$i:home_tile]=${h_tiles[$((i-1))]}
+        pawns[$color:$i:cur_pos]=${h_tiles[$((i-1))]}
+        pawns[$color:$i:steps_taken]=0
     done
 
 }
@@ -190,14 +137,16 @@ init.pawn(){
 
     local home_tiles_y=("4;7" "10;7" "4;19" "10;19")  # Yellow Boxes
     local home_tiles_b=("4;43" "10;43" "4;55" "10;55") # Blue Boxes
-    local home_tiles_g=("22;43" "28;43" "22;55" "28;55") # Red Boxes
-    local home_tiles_r=("22;7" "28;7" "22;19" "28;19") # Green Boxes 
+    local home_tiles_r=("22;43" "28;43" "22;55" "28;55") # Red Boxes
+    local home_tiles_g=("22;7" "28;7" "22;19" "28;19") # Green Boxes 
 
-    init.pawn.prop y "18;29" ${home_tiles_y[@]}
-    init.pawn.prop b "28;15" ${home_tiles_b[@]}
-    init.pawn.prop g "14;5"  ${home_tiles_g[@]}
-    init.pawn.prop r "4;19"  ${home_tiles_r[@]}
+    init.pawn.prop y "14;7" ${home_tiles_y[@]}
+    init.pawn.prop b "4;35" ${home_tiles_b[@]}
+    init.pawn.prop g "28;27"  ${home_tiles_g[@]}
+    init.pawn.prop r "18;55"  ${home_tiles_r[@]}
 
+
+    
 }
 
 
@@ -211,23 +160,6 @@ init.pawn(){
 
 source colors.sh
 
-
-print.func(){
-    printf $1
-}
-
-# print.box(){
-#     color=$2
-#     # bgcolor=$3
-
-#     printf "\e[$1H\e[1A\e[2D" 
-#     printf "$color"
-#     printf "+---+"
-#     printf "\e[1B\e[5D"
-#     printf "|${bgcolor}   \e[0;m${color}|"
-#     printf "\e[1B\e[5D"
-#     printf "+---+\e[0m"
-# }
 
 print.box.auto(){
 
@@ -253,13 +185,22 @@ print.box.sample(){
 
 }
 
-print.box.auto "14;17" "red"
-read s
-print.pawn(){
+print.pawn.old(){
     text_color=$2
     printf "\e[${1}H\e[1D\e[1;${text_color};40;7;5m 1 \e[0m"
 }
-clear
+print.pawn(){
+    # $1 is the color of the pawn
+    # $2 is the number of the pawn
+    local pos=${pawns[$1:$2:cur_pos]}
+    local color_code=${colors[$1]}
+    printf "\e[${pos}H\e[1D\e[1;${color_code};40;7;5m 1 \e[0m"
+}
+print.pawn.empty(){
+   printf "\e[${1}H\e[1D\e[0m   \e[0m"
+
+}
+
 
 source printing.sh
 
@@ -270,16 +211,16 @@ paint.board(){
     tput cup 0 0
     cat "design_board.txt"
 
-    total_colors=("yellow" "blue" "red" "green")
+    local total_colors=("yellow" "blue" "red" "green")
 
-    colored_boxes=(
+    local colored_boxes=(
         "14;7"  "18;11"  # Yellow Boxes
         "6;27"  "4;35"   # Blue Boxes
         "14;51" "18;55"  # Red Boxes
         "28;27" "26;35"  # Green Boxes 
     )
 
-    i=0
+    local i=0
 
     for index in "${!colored_boxes[@]}"; do
         color_tile=${total_colors[$(($index/2))]}
@@ -318,9 +259,116 @@ printf "\e[5m\e[3;5H$Ludo_L"
 printf "\e[5m\e[3;41H$Ludo_U"
 printf "\e[5m\e[21;5H$Ludo_D"
 printf "\e[5m\e[21;41H$Ludo_O"
-read d
+# read d
+
+
 
 
 paint.board
-read
+# read
+
+change.pawn.pos(){
+    # Changes the position of a pawn
+    # Erases the pawn from old position and prints it to the new position
+    # Also updates the current position of the pawn
+    local color=$1
+    local pawn_num=$2
+    local new_pos=$3
+
+    print.pawn.empty ${pawns[$color:${pawn_num}:cur_pos]}
+
+    pawns[$color:${pawn_num}:cur_pos]=$new_pos
+    sleep .4
+    # print.pawn ${pawns[$color:${pawn_num}:cur_pos]} ${colors[$color]}
+    print.pawn $color $pawn_num
+}
+
+open.pawn(){
+    local color=$1
+    local pawn_num=$2
+    
+    # pawns[$color:${pawn_num}:cur_pos]=${pawns[${color}:${pawn_num}:start_tile]}
+    change.pawn.pos $color $pawn_num ${pawns[${color}:${pawn_num}:start_tile]}
+}
+
+move.pawn(){
+    local color=$1
+    local pawn_num=$2
+
+    local num_steps=$3
+
+
+    for (( steps=1; steps<=$num_steps;steps++ )); do
+        local tile_pos=${pawns[${color}:${pawn_num}:cur_pos]}
+        sleep .5
+        
+        change.pawn.pos $color $pawn_num ${board_tiles[$tile_pos:$4]}
+        
+    done
+
+    pawns[$color:$pawn_num:steps_taken]=$((${pawns[$color:$pawn_num:steps_taken]}+$num_steps)) 
+}
+
+# clear
+tile="2;35"
+tile="20;31"
+t=("next" "back")
+
+# while true; do
+#     # printf "$tile\n"
+#     print.pawn $tile 31
+#     sleep .5
+#     print.pawn.empty $tile
+
+#     i=$(($RANDOM%1))
+#     i=1
+
+
+#     tile=${board_tiles[${tile}:${t[$i]}]}
+
+# done
+tput civis      -- invisible
+stty -echo
+# open.pawn r 1 
+init.pawn
+my.pwn(){
+    # print.pawn ${pawns[$1:$2:cur_pos]} ${colors[$1]}
+    print.pawn $1 $2
+}
+my.pwn r $1
+my.pwn b $1
+my.pwn g $1
+my.pwn y $1
+# sleep 4
+# change.pawn.pos r 1 "18;55"
+open.pawn r $1
+move.pawn r 1 3 next
+# my.pwn r $1
+
+source keyboard.sh
+exit=""
+while [[ -z $exit ]]; do
+        key=$(keyboard_handler)
+
+        case "$key" in 
+
+
+            q)
+                exit="EXIT"
+                break;;
+
+            ":up")
+                move.pawn r 1 1 next
+                ;;
+
+            ":down")
+                move.pawn r 1 1 back
+                ;;        
+                
+
+        esac
+done
+# read
+stty echo
+tput cnorm   -- normal
 ###########################END################################

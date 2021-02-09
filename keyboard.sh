@@ -116,10 +116,10 @@ keyboard_handler(){
         [a-zA-Z])
             echo $key;;
 
-        q) # q: quit
-            # quit.key
-            echo :quit
-            # exit;;
+        # q) # q: quit
+        #     # quit.key
+        #     echo :quit
+        #     # exit;;
 
     esac    
 
