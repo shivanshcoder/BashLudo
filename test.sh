@@ -132,14 +132,14 @@ dice_f[0]=$"     \e[5D\e[1B     \e[5D\e[1B     \e[5D\e[1B"
 
 # dice_f[0]=$" ----- \e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B ----- "
 
-dice_f[6]=$" ----- \e[7D\e[1B|$ $ $|\e[7D\e[1B|     |\e[7D\e[1B|$ $ $|\e[7D\e[1B ----- "
-dice_f[5]=$" ----- \e[7D\e[1B|$   $|\e[7D\e[1B|  $  |\e[7D\e[1B|$   $|\e[7D\e[1B ----- "
-dice_f[4]=$" ----- \e[7D\e[1B|$   $|\e[7D\e[1B|     |\e[7D\e[1B|$   $|\e[7D\e[1B ----- "
-dice_f[3]=$" ----- \e[7D\e[1B|$    |\e[7D\e[1B|  $  |\e[7D\e[1B|    $|\e[7D\e[1B ----- "
-dice_f[2]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|$   $|\e[7D\e[1B|     |\e[7D\e[1B ----- "
-dice_f[1]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|  $  |\e[7D\e[1B|     |\e[7D\e[1B ----- "
-dice_f[0]=$" ----- \e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B ----- "
-dice_f[0]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|     |\e[7D\e[1B|     |\e[7D\e[1B ----- "
+# dice_f[6]=$" ----- \e[7D\e[1B|$ $ $|\e[7D\e[1B|     |\e[7D\e[1B|$ $ $|\e[7D\e[1B ----- "
+# dice_f[5]=$" ----- \e[7D\e[1B|$   $|\e[7D\e[1B|  $  |\e[7D\e[1B|$   $|\e[7D\e[1B ----- "
+# dice_f[4]=$" ----- \e[7D\e[1B|$   $|\e[7D\e[1B|     |\e[7D\e[1B|$   $|\e[7D\e[1B ----- "
+# dice_f[3]=$" ----- \e[7D\e[1B|$    |\e[7D\e[1B|  $  |\e[7D\e[1B|    $|\e[7D\e[1B ----- "
+# dice_f[2]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|$   $|\e[7D\e[1B|     |\e[7D\e[1B ----- "
+# dice_f[1]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|  $  |\e[7D\e[1B|     |\e[7D\e[1B ----- "
+# dice_f[0]=$" ----- \e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B|\e[7m     \e[0m|\e[7D\e[1B ----- "
+# dice_f[0]=$" ----- \e[7D\e[1B|     |\e[7D\e[1B|     |\e[7D\e[1B|     |\e[7D\e[1B ----- "
 # \e[7m     \e[0m
 
 
@@ -154,17 +154,40 @@ clear
 
 i=1
 # print.boxx "1;1" 7 5
-while true; do
-    printf "\e[2;2H${dice_f[$i]}"
-    # read s
-    i=$(($i+1))
-    i=$((i%7))
-    # i=$((1 + RANDOM % 7))
 
-    sleep 0.04
-    printf "\e[2;2H\e[7m${dice_f[0]}\e[0m"
-    sleep 0.08
-    # read s
+print_place="5;5"
 
-done
+# while true; do
+#     printf "\e[${print_place}H${dice_f[$i]}"
+#     # read s
+#     i=$(($i+1))
+#     i=$((i%7))
+#     # i=$((1 + RANDOM % 7))
 
+#     sleep 0.04
+#     printf "\e[${print_place}H\e[7m${dice_f[0]}\e[0m"
+#     sleep 0.08
+#     # read s
+
+# done
+
+
+dice.roll(){
+    dice_val=0
+    
+    # Gets a random number from 1 - 6
+    dice_val=$((1 + RANDOM % 6));
+
+    for i in {1..10}; do
+        j=$((1+RANDOM%6))
+        printf "\e[${print_place}H${dice_f[$j]}"
+        sleep 0.04
+        printf "\e[${print_place}H\e[7m${dice_f[0]}\e[0m"
+        sleep 0.08
+
+    done
+    printf "\e[${print_place}H${dice_f[$dice_val]}"
+}
+
+dice.roll
+printf "\n\n\n\n$dice_val"

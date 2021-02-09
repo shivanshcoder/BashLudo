@@ -113,8 +113,11 @@ init.pawn.prop(){
     # Get the color
     local color=$1
     
+    local pawn_char=${color^}
+
     # Set the start tile, where the pawns enter the game for moving
     local start_tile=$2
+
 
     # shift so that only home_tile coordinates are left in the array
     shift 
@@ -125,6 +128,7 @@ init.pawn.prop(){
 
     for i in {1..4}; do
         pawns[$color:$i:start_tile]=$start_tile
+        pawns[$color:$i:pawn_char]=$pawn_char
 
         pawns[$color:$i:home_tile]=${h_tiles[$((i-1))]}
         pawns[$color:$i:cur_pos]=${h_tiles[$((i-1))]}
@@ -158,46 +162,37 @@ init.pawn(){
 ##########################START###############################
 # Try printing stuff
 
-source colors.sh
+declare -A colors
+colors[r]=31
+colors[b]=34
+colors[g]=32
+colors[y]=33
 
 
-print.box.auto(){
+print.box(){
+    local color="\e[${colors[$2]}m"
 
-    color=$2
-    border_color=${colors[$color:border]}
-    # bgcolor=${colors[$color:bg]}
-    # bgcolor=""
-    
-    printf "\e[m\e[$1H\e[1A\e[2D" 
-    printf "\e[${border_color}m"
+
+    printf "\e[$1H\e[1A\e[2D" 
+    printf "${color}"
     printf "+---+"
     printf "\e[1B\e[5D"
-    # printf "|\e[${bgcolor}m   \e[0m\e[${border_color}m|"
     printf "|   |"
     printf "\e[1B\e[5D"
     printf "+---+\e[0m"
 }
 
 
-print.box.sample(){
-    addr=$1
-
-
-}
-
-print.pawn.old(){
-    text_color=$2
-    printf "\e[${1}H\e[1D\e[1;${text_color};40;7;5m 1 \e[0m"
-}
 print.pawn(){
     # $1 is the color of the pawn
     # $2 is the number of the pawn
     local pos=${pawns[$1:$2:cur_pos]}
     local color_code=${colors[$1]}
-    printf "\e[${pos}H\e[1D\e[1;${color_code};40;7;5m 1 \e[0m"
+    local pawn_char=${pawns[$1:$2:pawn_char]}
+    printf "\e[${pos}H\e[1D\e[1;${color_code};5m $pawn_char \e[0m"
 }
 print.pawn.empty(){
-   printf "\e[${1}H\e[1D\e[0m   \e[0m"
+   printf "\e[${1}H\e[1D\e[0m   "
 
 }
 
@@ -211,7 +206,7 @@ paint.board(){
     tput cup 0 0
     cat "design_board.txt"
 
-    local total_colors=("yellow" "blue" "red" "green")
+    local total_colors=("y" "b" "r" "g")
 
     local colored_boxes=(
         "14;7"  "18;11"  # Yellow Boxes
@@ -226,27 +221,28 @@ paint.board(){
         color_tile=${total_colors[$(($index/2))]}
         coords=${colored_boxes[$index]}
 
-        print.box.auto $coords "$color_tile"
+        # print.box.auto $coords "$color_tile"
+        print.box $coords "$color_tile"
     done
 
     #Yellow Boxes
     for i in {7..23..4}; do
-        print.box "16;$i" $yellowfg $yellowbg
+        print.box "16;$i" y
     done
 
     #Blue Boxes
     for j in {4..12..2}; do
-        print.box "$j;31" $bluefg $bluebg
+        print.box "$j;31" b
     done
 
     #Red Boxes
     for j in {39..55..4}; do
-        print.box "16;$j" $redfg $redbg
+        print.box "16;$j" r
     done
 
     #Green Boxes
     for j in {20..28..2}; do
-        print.box "$j;31" $greenfg $greenbg
+        print.box "$j;31" g
     done
 
     printf "\e[3;5H$Ludo_L"
@@ -309,24 +305,7 @@ move.pawn(){
     pawns[$color:$pawn_num:steps_taken]=$((${pawns[$color:$pawn_num:steps_taken]}+$num_steps)) 
 }
 
-# clear
-tile="2;35"
-tile="20;31"
-t=("next" "back")
 
-# while true; do
-#     # printf "$tile\n"
-#     print.pawn $tile 31
-#     sleep .5
-#     print.pawn.empty $tile
-
-#     i=$(($RANDOM%1))
-#     i=1
-
-
-#     tile=${board_tiles[${tile}:${t[$i]}]}
-
-# done
 tput civis      -- invisible
 stty -echo
 # open.pawn r 1 
@@ -342,10 +321,15 @@ my.pwn y $1
 # sleep 4
 # change.pawn.pos r 1 "18;55"
 open.pawn r $1
-move.pawn r 1 3 next
+# move.pawn r 1 3 next
 # my.pwn r $1
 
-source keyboard.sh
+########################################################
+
+########################################################################
+
+
+source utils.sh
 exit=""
 while [[ -z $exit ]]; do
         key=$(keyboard_handler)
@@ -356,6 +340,10 @@ while [[ -z $exit ]]; do
             q)
                 exit="EXIT"
                 break;;
+            ":space")
+                dice.roll ${colors[r]}
+                move.pawn r 1 $dice_val next
+                ;;
 
             ":up")
                 move.pawn r 1 1 next

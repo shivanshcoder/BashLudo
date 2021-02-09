@@ -77,15 +77,16 @@ game.loop(){
 # game.loop
 
 source printing.sh
-source keyboard.sh
+source utils.sh
 
 
 
 
-game.start(){
+game.menu(){
 
-    positions=("3;5" "3;41" "21;5" "21;41")
-    icons=("$Ludo_L" "$Ludo_U" "$Ludo_D" "$Ludo_O")
+    local positions=("3;5" "3;41" "21;5" "21;41")
+    local icons=("$Ludo_L" "$Ludo_U" "$Ludo_D" "$Ludo_O")
+    local names=("Not Playing" "Not Playing" "Not Playing" "Not Playing")
 
     for i in {0..3}; do
         printf "\e[${positions[$i]}H${icons[$i]}"
@@ -94,14 +95,14 @@ game.start(){
     instructions
 
     # cursor_pos=("7;12" "7;48" "25;12" "25;48")
-    cursor_pos=("7;9" "7;45" "25;9" "25;45")
-    index=0
+    local cursor_pos=("7;9" "7;45" "25;9" "25;45")
+    local index=0
 
     old_index=0
     printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
 
-    # printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
     printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
+    printf "\e[16;16HPlayer Name: ${names[$index]}"
 
     while true; do
         key=$(keyboard_handler)
@@ -118,8 +119,9 @@ game.start(){
                 break;;
 
             e)
-                printf "\e[16;16HPlease Enter Name"
-                read name
+                printf "\e[16;16HPlease Enter Name                 "
+                read the_name
+                names[$index]=$the_name
                 # break;;
                 
             # [a-zA-Z]*)
@@ -132,9 +134,11 @@ game.start(){
 
             printf "\e[${positions[$old_index]}H${icons[$old_index]}"
             printf "\e[${cursor_pos[$old_index]}H   "
+            printf "\e[16;16H                                          "
 
             printf "\e[5m\e[${positions[$index]}H${icons[$index]}"
             printf "\e[${cursor_pos[$index]}H\e[5;7m(=)\e[0m"
+            printf "\e[16;16HPlayer Name: ${names[$index]}"
         fi
 
         old_index=$index
@@ -150,7 +154,7 @@ game.start(){
 # done
 }
 clear
-game.start
+game.menu
 # printf "\e[5m\e[3;5H$Ludo_L"
 # read 
 # printf "\e[3;5H$Ludo_L"
