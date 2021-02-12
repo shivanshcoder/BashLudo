@@ -70,12 +70,16 @@ dice_f[2]=$"     \e[5D\e[1B$   $\e[5D\e[1B     \e[5D\e[1B"
 dice_f[1]=$"     \e[5D\e[1B  $  \e[5D\e[1B     \e[5D\e[1B"
 dice_f[0]=$"     \e[5D\e[1B     \e[5D\e[1B     \e[5D\e[1B"
 
+dice_values=""
+
 dice.roll(){
     print_place="15;29"
+
     dice_val=0
     
     # Gets a random number from 1 - 6
     dice_val=$((1 + RANDOM % 6));
+    dice_values=$dice_values$dice_val
 
     for i in {1..10}; do
         j=$((1+RANDOM%6))
@@ -88,4 +92,10 @@ dice.roll(){
 
     done
     printf "\e[${1}m\e[${print_place}H${dice_f[$dice_val]}\e[0m"
+}
+
+pop.dice.value(){
+    echo ${dice_values:0:1}
+    dice_values=${dice_values:1}
+    # echo $dice_values
 }

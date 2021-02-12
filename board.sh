@@ -314,22 +314,46 @@ my.pwn(){
     # print.pawn ${pawns[$1:$2:cur_pos]} ${colors[$1]}
     print.pawn $1 $2
 }
-my.pwn r $1
-my.pwn b $1
-my.pwn g $1
-my.pwn y $1
+my.pwn r 1
+my.pwn r 2
+my.pwn r 3
+my.pwn r 4
 # sleep 4
 # change.pawn.pos r 1 "18;55"
 open.pawn r $1
 # move.pawn r 1 3 next
 # my.pwn r $1
 
-########################################################
-
-########################################################################
-
 
 source utils.sh
+########################################################
+
+player.dice.roll(){
+    dice.roll 31
+
+    if [[ dice_val -eq 6 ]]; then
+        dice.roll 31
+    fi
+
+    if [[ dice_val -eq 6 ]]; then
+        dice.roll 31
+    fi
+    printf "$dice_values"
+}
+
+# player.turn(){
+#     $color=$1
+#     $curr_selected_pawn=1
+
+#     dice.roll ${colors[$color]}
+#     local exit_cond=""
+#     while [[ -z $exit_cond]]
+
+# }
+
+########################################################################
+ 
+
 exit=""
 while [[ -z $exit ]]; do
         key=$(keyboard_handler)
@@ -341,16 +365,17 @@ while [[ -z $exit ]]; do
                 exit="EXIT"
                 break;;
             ":space")
-                dice.roll ${colors[r]}
-                move.pawn r 1 $dice_val next
+                player.dice.roll ${colors[r]}
+                move.pawn r "1" $(pop.dice.value) next
+                echo $dice_values
                 ;;
 
             ":up")
-                move.pawn r 1 1 next
+                move.pawn r 1 "1" next
                 ;;
 
             ":down")
-                move.pawn r 1 1 back
+                move.pawn r 1 "1" back
                 ;;        
                 
 
