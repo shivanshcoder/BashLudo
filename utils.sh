@@ -79,7 +79,7 @@ dice.roll(){
     
     # Gets a random number from 1 - 6
     dice_val=$((1 + RANDOM % 6));
-    dice_values=$dice_values$dice_val
+    dice_values="$dice_values$dice_val"
 
     for i in {1..10}; do
         j=$((1+RANDOM%6))
@@ -89,13 +89,27 @@ dice.roll(){
         sleep 0.04
         printf "\e[${print_place}H${dice_f[0]}\e[0m"
         sleep 0.08
-
     done
+
     printf "\e[${1}m\e[${print_place}H${dice_f[$dice_val]}\e[0m"
 }
 
-pop.dice.value(){
-    echo ${dice_values:0:1}
-    dice_values=${dice_values:1}
-    # echo $dice_values
+
+player.dice.roll(){
+    
+    dice_values=""
+    dice_val=6
+
+    while [[ $dice_val -eq 6 ]]; do
+        # $1 is the color of the player ( r g b y)
+        dice.roll ${colors[$1]}
+
+        #sleep 2
+        if [[ $dice_values == "666" ]]; then
+            dice_values=""
+            # If we get 6 in a row, should skip the turn
+            break;
+        fi
+    done
 }
+

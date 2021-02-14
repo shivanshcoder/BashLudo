@@ -86,15 +86,15 @@ game.menu(){
 
     local positions=("3;5" "3;41" "21;5" "21;41")
     local icons=("$Ludo_L" "$Ludo_U" "$Ludo_D" "$Ludo_O")
-    local names=("Not Playing" "Not Playing" "Not Playing" "Not Playing")
 
     for i in {0..3}; do
         printf "\e[${positions[$i]}H${icons[$i]}"
     done
+    
+    local names=("Not Playing" "Not Playing" "Not Playing" "Not Playing")
 
     instructions
 
-    # cursor_pos=("7;12" "7;48" "25;12" "25;48")
     local cursor_pos=("7;9" "7;45" "25;9" "25;45")
     local index=0
 
@@ -119,13 +119,10 @@ game.menu(){
                 break;;
 
             e)
-                printf "\e[16;16HPlease Enter Name                 "
+                printf "\e[16;16H                                  "
+                printf "\e[16;16HPlease Enter Name"
                 read the_name
                 names[$index]=$the_name
-                # break;;
-                
-            # [a-zA-Z]*)
-            #     echo "$key";;
 
         esac
 
@@ -143,18 +140,28 @@ game.menu(){
 
         old_index=$index
     done
-
-
-    # while true; do
-#     key=$(keyboard_handler)
-#     echo "This was pressed:  $key"
-#     if [[  $key == "Bye!" ]]; then
-#         break;
-#     fi
-# done
 }
+
+
 clear
-game.menu
-# printf "\e[5m\e[3;5H$Ludo_L"
-# read 
-# printf "\e[3;5H$Ludo_L"
+
+game.start(){
+    # print Menu
+
+    # Get Player Names
+    
+    # Start Game
+
+    # Ask if want to play again?
+}
+
+game(){
+    # Start with a Random Player
+
+    # Let each player do their turns
+
+    # Whenever all pawns reach end, player wins 
+}
+
+
+game.start

@@ -37,3 +37,52 @@ instructions(){
     # printf "\e[17;12HWhile on a color, you can edit player name,"
     # printf "\e[18;14Hby directly typing using alphabet keys"
 }
+
+
+##################################################
+
+declare -A colors
+colors[r]=31
+colors[b]=34
+colors[g]=32
+colors[y]=33
+
+
+print.box(){
+    local color="\e[${colors[$2]}m"
+
+    printf "\e[$1H\e[1A\e[2D" 
+    printf "${color}"
+    printf "+---+"
+    printf "\e[1B\e[5D"
+    printf "|   |"
+    printf "\e[1B\e[5D"
+    printf "+---+\e[0m"
+}
+
+
+print.pawn(){
+    # $1 is the color of the pawn
+    # $2 is the number of the pawn
+    local pos=${pawns[$1:$2:cur_pos]}
+    local color_code=${colors[$1]}
+    local pawn_char=${pawns[$1:$2:pawn_char]}
+    printf "\e[${pos}H\e[1D\e[1;${color_code};5m $pawn_char \e[0m"
+}
+
+print.pawn.empty(){
+   printf "\e[${1}H\e[1D\e[0m   "
+
+}
+
+print.all.pawns(){
+    local all_colors=(y b r g)
+
+    for pawn_color in ${all_colors[@]}; do
+        for pawn_index in {1..4}; do
+            print.pawn $pawn_color $pawn_index
+        done
+    done 
+}
+
+####################################
