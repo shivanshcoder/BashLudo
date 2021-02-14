@@ -67,7 +67,7 @@ print.pawn(){
     local pos=${pawns[$1:$2:cur_pos]}
     local color_code=${colors[$1]}
     local pawn_char=${pawns[$1:$2:pawn_char]}
-    printf "\e[${pos}H\e[1D\e[1;${color_code};5m $pawn_char \e[0m"
+    printf "\e[${pos}H\e[1D\e[1;${color_code}m $pawn_char \e[0m"
 }
 
 print.pawn.empty(){
@@ -83,6 +83,16 @@ print.all.pawns(){
             print.pawn $pawn_color $pawn_index
         done
     done 
+}
+
+highlight.pawn(){
+    printf "\e[5;7m"
+    print.pawn $@
+    printf "\e[0m"
+}
+
+unhighlight.pawn(){
+    print.pawn $@
 }
 
 ####################################

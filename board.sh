@@ -168,89 +168,73 @@ init.pawn
 
 print.all.pawns 
 open.pawn r 1
+highlight.pawn r 1
 
-
-read ss
 
 source utils.sh
 ########################################################
 
 
-get.movable.pawns(){
-    local color=$1
-    local move_amount=$2
+# player.turn(){
+#     local color=$1
+#     local curr_selected_pawn=1
 
-    for i in {1..4}; do
-        # Check if the pawn is open
+#     ludo.dice.roll $color
 
-        # 
-    done
+#     while [[ -n $dice_values ]]; do
+#         # While we have some moves left because of dice
 
-    movable_pawns_arr=1
-    
-}
+#         # Get the amount we want to move 
+#         move_amount=${dice_values:0:1}
 
-player.turn(){
-    local color=$1
-    local curr_selected_pawn=1
+#         # Remove the move_amount from the dice_values string, so we don't repeat it
+#         dice_values=${dice_values:1}
 
-    # dice.roll ${colors[$color]}
+#         # get.movable.pawns $color $move_amount
+#         # curr_selected_pawn=$movable_pawns_arr
 
-    player.dice.roll $color
-
-    while [[ -n $dice_values ]]; do
-        # While we have some moves left because of dice
-
-        # Get the amount we want to move 
-        move_amount=${dice_values:0:1}
-
-        # Remove the move_amount from the dice_values string, so we don't repeat it
-        dice_values=${dice_values:1}
-
-        get.movable.pawns $color $move_amount
-
-        while true; do
-            key=$(keyboard_handler)
-            case "$key" in
-                ":left")
+#         while true; do
+#             key=$(keyboard_handler)
+#             case "$key" in
+#                 ":left")
                     
-                    break
-                ;;
+#                     break
+#                 ;;
 
-                ":right")
+#                 ":right")
 
-                    break
-                ;;
+#                     break
+#                 ;;
 
-                ":space")
-                    move.pawn $color $curr_selected_pawn $move_amount next
-                    break
-                    ;;
-            esac
-        done 
+#                 ":space")
+#                     move.pawn $color $curr_selected_pawn $move_amount next
+#                     break
+#                     ;;
+#             esac
+#         done 
 
-        curr_selected_pawn=$(($curr_selected_pawn % ${#movable_pawns_arr}))
+#         curr_selected_pawn=$(($curr_selected_pawn % ${#movable_pawns_arr}))
 
-    done
+#     done
 
-    # local exit_cond=""
-    # while [[ -z $exit_cond ]]; do
-    #     key=$(keyboard_handler)
+#     # local exit_cond=""
+#     # while [[ -z $exit_cond ]]; do
+#     #     key=$(keyboard_handler)
 
-    #     case "$key" in
+#     #     case "$key" in
 
-    #         ":left")
+#     #         ":left")
 
-    #         ;;
-    #         ":right")
+#     #         ;;
+#     #         ":right")
 
 
-    #         ;;
+#     #         ;;
             
-    #     esac
-    # done
+#     #     esac
+#     # done
 
-}
+# }
 
 ########################################################################
  

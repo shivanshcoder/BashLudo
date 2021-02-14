@@ -58,6 +58,16 @@ keyboard_handler(){
 
 }
 
+increment.limit(){
+    val=$1
+    limit=$2
+    increment_value=$3
+
+    val=$(( $val + $increment_value ))
+    val=$(( $val % $limit ))
+    echo $val
+}
+
 
 
 declare -A dice_f
@@ -95,7 +105,7 @@ dice.roll(){
 }
 
 
-player.dice.roll(){
+ludo.dice.roll(){
     
     dice_values=""
     dice_val=6

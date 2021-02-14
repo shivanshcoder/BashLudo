@@ -5,14 +5,13 @@
 
 # game.loop
 
-
+source game-ini.sh
+source board.sh
 myloop(){
+    paint.board
 
-    if [ -z $1 ]; then
-        echo "No Args"
-    else
-        echo "Args given"
-    fi
+    read
+
 }
 
 myloop

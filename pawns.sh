@@ -100,4 +100,22 @@ choose.pawn(){
 
 }
 
+
+
+# Implement it later
+# get.movable.pawns(){
+#     local color=$1
+#     local move_amount=$2
+
+#     for i in {1..4}; do
+#         # Check if the pawn is open
+#         echo s
+#         # 
+#     done
+
+#     movable_pawns_arr=1
+    
+# }
+
+
 ###########################END################################
