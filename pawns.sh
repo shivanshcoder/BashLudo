@@ -32,7 +32,6 @@ init.pawn.prop(){
         pawns[$color:$i:home_tile]=${h_tiles[$((i-1))]}
         pawns[$color:$i:cur_pos]=${h_tiles[$((i-1))]}
         pawns[$color:$i:steps_taken]=0
-        pawns[$color:$i:can_move]=false
     done
 
 }
@@ -109,13 +108,46 @@ choose.pawn(){
 
 #     for i in {1..4}; do
 #         # Check if the pawn is open
-#         echo s
+#         # If the current Position is 
+#         if [[ ${pawns[$color:$i:cur_pos]} == ${pawns[$color:$i:home_tile]} && $move_amount -eq 6 && $move_amount -eq 1 ]]; then
+#             movable_pawns_arr+=($i)
+#             continue
+#         fi
+
+#         if [[ ${pawns[$color:$i:steps_taken]} -eq $($pawn_max_steps - $move_amount) ]]; then
+
+#         fi
+
+
+
+        
 #         # 
 #     done
 
 #     movable_pawns_arr=1
     
 # }
+get.movable.pawns(){
+    local color=$1
+    local move_amount=$2
+    movable_pawns_arr=(
+
+    )
+    for i in {1..4}; do
+        # Check if the pawn is open
+        # If the current Position is 
+
+        if [[ ${pawns[$color:$i:cur_pos]} == ${pawns[$color:$i:home_tile]}  ]]; then
+            if [[ $move_amount -ne 6 && $move_amount -ne 1 ]]; then
+                continue
+            fi
+        fi
+        movable_pawns_arr+=($i)
+    done
+
+
+    
+}
 
 
 ###########################END################################

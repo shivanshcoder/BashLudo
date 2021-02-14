@@ -168,7 +168,12 @@ init.pawn
 
 print.all.pawns 
 open.pawn r 1
+open.pawn r 4
 highlight.pawn r 1
+
+# get.movable.pawns r 6
+
+
 
 
 source utils.sh
@@ -238,8 +243,9 @@ source utils.sh
 
 ########################################################################
  
-
+dice_val=0
 exit=""
+index=1
 while [[ -z $exit ]]; do
         key=$(keyboard_handler)
 
@@ -252,18 +258,24 @@ while [[ -z $exit ]]; do
                 ;;
 
             ":space")
-                # player.dice.roll ${colors[r]}
-                # player.dice.roll r
-                # move.pawn r "1" 1 next
-                player.turn r 1
+                # move.pawn r $index $dice_val next 
+                echo "$index = $dice_val"
                 ;;
 
+            "d")
+                ludo.dice.roll r
+                get.movable.pawns r $dice_val
+                ;;
+
+
             ":up")
-                move.pawn r 1 "1" next
+                # move.pawn r 1 $dice_val next
+                increment.limit $index ${#movable_pawns_arr} 1
                 ;;
  
             ":down")
-                move.pawn r 1 "1" back
+                # move.pawn r 1 $dice_val back
+                increment.limit $index ${#movable_pawns_arr} -1
                 ;;        
                 
 
