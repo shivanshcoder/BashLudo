@@ -73,18 +73,22 @@ link.tiles "14;23" "12;27"
 
 board_tiles[16;3:tunnel]="16;7"
 board_tiles[16;7:back]="16;3"
-chain.horz 16 7 23 2
+board_tiles[16;23:next]="7;13"
+chain.horz 16 7 23 4
 
 board_tiles[16;59:tunnel]="16;55"
 board_tiles[16;55:back]="16;59"
-chain.horz 16 55 39 -2
+board_tiles[16;39:next]="25;49"
+chain.horz 16 55 39 -4
 
 board_tiles[2;31:tunnel]="4;31"
 board_tiles[4;31:back]="2;31"
+board_tiles[12;31:next]="7;49"
 chain.vert 4 12 31 2
 
 board_tiles[30;31:tunnel]="28;31"
 board_tiles[28;31:back]="30;31"
+board_tiles[20;31:next]="25;13"
 chain.vert 28 20 31 -2
 ###########################END################################
 
@@ -167,13 +171,15 @@ init.pawn
 
 
 print.all.pawns 
+open.pawn b 0
+open.pawn b 1
+open.pawn b 2
+open.pawn b 3
 open.pawn r 0
 open.pawn r 1
 open.pawn r 2
 open.pawn r 3
-move.pawn r 1 1 next
-highlight.pawn r 1
-open.pawn b 2
+print.all.pawns 
 
 # get.movable.pawns r 6
 
@@ -181,6 +187,7 @@ open.pawn b 2
 
 
 source utils.sh
+source pawns.sh
 ########################################################
 
 
@@ -245,51 +252,62 @@ source utils.sh
 
 # }
 
-########################################################################
- 
-dice_val=0
-exit=""
-index=1
-while [[ -z $exit ]]; do
+player.turn(){
+    color=$1
+
+
+    ludo.dice.roll $color
+    # get.movable.pawns $color $dice_val
+    index=0
+    highlight.pawn $color $index
+    
+    local exit=""
+    while [[ -z $exit ]]; do
         key=$(keyboard_handler)
 
-        case "$key" in 
+        case "$key" in
 
+        ":left")
+            unhighlight.pawn $color $index
+            index=$(increment.limit $index 4 1)
+            highlight.pawn $color $index
+        ;;
 
-            q)
-                exit="EXIT"
-                break
-                ;;
+        ":right")
+            unhighlight.pawn $color $index
+            index=$(increment.limit $index 4 -1)
+            highlight.pawn $color $index
+        ;;
 
-            ":space")
-                move.pawn r $index $dice_val next 
-                # echo "$index = $dice_val"
-                ;;
-
-            "d")
-                ludo.dice.roll r
-                get.movable.pawns r $dice_val
-                ;;
-
-
-            ":up")
-                # move.pawn r 1 $dice_val next
-                unhighlight.pawn r $index
-                index=$(increment.limit $index 4 1)
-                highlight.pawn r $index
-                ;;
- 
-            ":down")
-                unhighlight.pawn r $index
-                # move.pawn r 1 $dice_val back
-                index=$(increment.limit $index 4 -1)
-                highlight.pawn r $index
-                ;;        
-                
-
+        ":space")
+            move.pawn $color $index $dice_val next
+            print.all.pawns
+            break
+        ;;
         esac
+    done
+}
+
+########################################################################
+ 
+
+all_p_colors=(y b g r)
+move.pawn r 0 49
+move.pawn r 1 49
+move.pawn r 2 49
+move.pawn r 3 49
+ii=0
+while true; do
+#$((RANDOM % 4))]}
+    ii=3
+    player.turn ${all_p_colors[$ii]} 
+    ii=$(increment.limit $ii 4 1)
+
+    if [[ $exit_condi == "exit" ]]; then
+        break
+    fi
 done
-# read
+echo ${finished_players[@]}
 stty echo
 tput cnorm   -- normal
 ###########################END################################
