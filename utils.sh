@@ -64,7 +64,12 @@ increment.limit(){
     increment_value=$3
 
     val=$(( $val + $increment_value ))
-    val=$(( $val % $limit ))
+    if [[ $val -lt 0 ]]; then
+        val=$((limit-1))
+    else
+        val=$(( $val % $limit ))
+    fi
+
     echo $val
 }
 

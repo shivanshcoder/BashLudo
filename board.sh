@@ -167,9 +167,13 @@ init.pawn
 
 
 print.all.pawns 
+open.pawn r 0
 open.pawn r 1
-open.pawn r 4
+open.pawn r 2
+open.pawn r 3
+move.pawn r 1 1 next
 highlight.pawn r 1
+open.pawn b 2
 
 # get.movable.pawns r 6
 
@@ -258,8 +262,8 @@ while [[ -z $exit ]]; do
                 ;;
 
             ":space")
-                # move.pawn r $index $dice_val next 
-                echo "$index = $dice_val"
+                move.pawn r $index $dice_val next 
+                # echo "$index = $dice_val"
                 ;;
 
             "d")
@@ -270,12 +274,16 @@ while [[ -z $exit ]]; do
 
             ":up")
                 # move.pawn r 1 $dice_val next
-                increment.limit $index ${#movable_pawns_arr} 1
+                unhighlight.pawn r $index
+                index=$(increment.limit $index 4 1)
+                highlight.pawn r $index
                 ;;
  
             ":down")
+                unhighlight.pawn r $index
                 # move.pawn r 1 $dice_val back
-                increment.limit $index ${#movable_pawns_arr} -1
+                index=$(increment.limit $index 4 -1)
+                highlight.pawn r $index
                 ;;        
                 
 

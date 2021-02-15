@@ -25,7 +25,7 @@ init.pawn.prop(){
     # Set home tiles, where the pawns are placed from start
     local h_tiles=($@)
 
-    for i in {1..4}; do
+    for i in {0..3}; do
         pawns[$color:$i:start_tile]=$start_tile
         pawns[$color:$i:pawn_char]=$pawn_char
 
@@ -127,13 +127,15 @@ choose.pawn(){
 #     movable_pawns_arr=1
     
 # }
+
+
 get.movable.pawns(){
     local color=$1
     local move_amount=$2
     movable_pawns_arr=(
 
     )
-    for i in {1..4}; do
+    for i in {0..3}; do
         # Check if the pawn is open
         # If the current Position is 
 
@@ -143,11 +145,7 @@ get.movable.pawns(){
             fi
         fi
         movable_pawns_arr+=($i)
-    done
-
-
-    
+    done    
 }
-
 
 ###########################END################################

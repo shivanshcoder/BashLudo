@@ -79,7 +79,7 @@ print.all.pawns(){
     local all_colors=(y b r g)
 
     for pawn_color in ${all_colors[@]}; do
-        for pawn_index in {1..4}; do
+        for pawn_index in {0..3}; do
             print.pawn $pawn_color $pawn_index
         done
     done 
