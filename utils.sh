@@ -39,15 +39,13 @@ keyboard_handler(){
             
         #     echo end;;
 
-        
-        $'\e[H')
-            echo :back;;
-
-        $"")   # Space or Enter Key
-            echo :space;;
 
         [a-zA-Z])
             echo $key;;
+        
+
+        $"")   # Space or Enter Key
+            echo :space;;
 
         # q) # q: quit
         #     # quit.key

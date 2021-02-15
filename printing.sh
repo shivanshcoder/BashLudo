@@ -27,7 +27,8 @@ print.ludo(){
 instructions(){
     printf "\e[5;30H\e[33mL\e[34mU\e[32mD\e[31mO\e[0m" 
     printf "\e[13;13HUsing Arrows chose the desired color"
-    printf "\e[15;18HCurrently Selected color"
+    printf "\e[15;18HPress E to change a player name"
+    printf "\e[17;18HPress s to start playing game"
 }
 
 
@@ -68,7 +69,7 @@ print.pawn.empty(){
 }
 
 print.all.pawns(){
-    local all_colors=(y b r g)
+    local all_colors=($@)
 
     for pawn_color in ${all_colors[@]}; do
         for pawn_index in {0..3}; do

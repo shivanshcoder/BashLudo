@@ -132,6 +132,7 @@ move.pawn(){
         if [[ ${pawns[$color:pawns_left]} -eq 0 ]]; then
             # The color is finished playing
             finished_players+=(r)
+
             exit_condi="exit"
         fi
         return 1;

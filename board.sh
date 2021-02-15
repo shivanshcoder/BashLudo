@@ -159,33 +159,6 @@ paint.board(){
     print.ludo
 }
 
-
-print.ludo
-
-paint.board
-
-tput civis -- invisible
-stty -echo
-# open.pawn r 1 
-init.pawn
-
-
-print.all.pawns 
-open.pawn b 0
-open.pawn b 1
-open.pawn b 2
-open.pawn b 3
-open.pawn r 0
-open.pawn r 1
-open.pawn r 2
-open.pawn r 3
-print.all.pawns 
-
-# get.movable.pawns r 6
-
-
-
-
 source utils.sh
 source pawns.sh
 ########################################################
@@ -266,6 +239,11 @@ player.turn(){
         key=$(keyboard_handler)
 
         case "$key" in
+        
+        "q")
+            exit_condi="exit"
+            break
+        ;;
 
         ":left")
             unhighlight.pawn $color $index
@@ -281,33 +259,45 @@ player.turn(){
 
         ":space")
             move.pawn $color $index $dice_val next
-            print.all.pawns
+            print.all.pawns ${all_p_colors[@]}
             break
         ;;
+
         esac
     done
 }
 
 ########################################################################
- 
 
-all_p_colors=(y b g r)
-move.pawn r 0 49
-move.pawn r 1 49
-move.pawn r 2 49
-move.pawn r 3 49
-ii=0
-while true; do
-#$((RANDOM % 4))]}
-    ii=3
-    player.turn ${all_p_colors[$ii]} 
-    ii=$(increment.limit $ii 4 1)
+game(){
 
-    if [[ $exit_condi == "exit" ]]; then
-        break
-    fi
-done
-echo ${finished_players[@]}
-stty echo
-tput cnorm   -- normal
+    
+    print.ludo
+
+    paint.board
+    
+    init.pawn
+
+    all_p_colors=($@)
+    print.all.pawns ${all_p_colors[@]}
+
+    ii=0
+    while true; do
+
+        player.turn ${all_p_colors[$ii]} 
+
+        ii=$(increment.limit $ii ${#all_p_colors[@]} 1)
+
+        if [[ $exit_condi == "exit" ]]; then
+            break
+        fi
+
+        if [[ ${#finished_players} -eq 4 ]]; then
+            break
+            # all players have finished playing
+        fi
+    done
+
+} 
+
 ###########################END################################
