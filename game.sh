@@ -209,6 +209,8 @@ game.start(){
 
     if [[ -n $exit_condi ]]; then
         clear
+        stty echo
+        tput cnorm -- normal
         echo "Forcefully quit game"
         return 1
     fi
